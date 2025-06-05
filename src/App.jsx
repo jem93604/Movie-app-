@@ -1,5 +1,7 @@
 import Search from "./components/Search";
 import { useState, useEffect } from "react";
+import Spinner from "./components/Spinner";
+import MovieCard from "./components/MovieCard";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -20,12 +22,13 @@ const App = () => {
     setIsLoading(true);
     setErrorMessage("");
     try {
-      const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+      const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&query=${searchTerm}`;
       const response = await fetch(endpoint, API_OPTIONS);
       if (!response.ok) {
         throw new Error("Failed to fetch movies ");
       }
-      const data = response.json();
+      const data = await response.json();
+      console.log(endpoint);
 
       if (data.response === false) {
         setErrorMessage(data.message || "Failed to fetch movies");
@@ -33,6 +36,7 @@ const App = () => {
         return;
       }
       setMovieList(data.results || []);
+      console.log(data);
     } catch (error) {
       setErrorMessage(`${error} while fetching movies try again later `);
     } finally {
@@ -54,9 +58,19 @@ const App = () => {
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
         <section className="all-movies">
-          <h1>All movies</h1>
+          <h1 className="mt-[40px]">All movies</h1>
 
-          {errorMessage ? <p className="text-red-600">{errorMessage}</p> : null}
+          {isLoading ? (
+            <Spinner />
+          ) : errorMessage ? (
+            <p className="text-red-500">{errorMessage}</p>
+          ) : (
+            <ul className="movie-list">
+              {movieList.map((movie) => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </ul>
+          )}
         </section>
       </div>
     </main>
