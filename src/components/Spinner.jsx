@@ -1,9 +1,14 @@
 const Spinner = () => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+      }}
+    >
       <span className="loader"></span>
-
-      <style></style>
     </div>
   );
 };

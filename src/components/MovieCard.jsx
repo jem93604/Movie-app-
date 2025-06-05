@@ -21,8 +21,15 @@ const MovieCard = ({
               src="https://img.icons8.com/emoji/48/star-emoji.png"
               alt="star-emoji"
             />
-            <p>{vote_average}</p>
+            <p>{vote_average ? vote_average.toFixed(1) : "N/A"}</p>
           </div>
+          <span>•</span>
+          <p className="lang">{original_language}</p>
+
+          <span>•</span>
+          <p className="year">
+            {release_date ? release_date.split("-")[0] : "N/A"}
+          </p>
         </div>
       </div>
     </div>
